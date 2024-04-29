@@ -1,6 +1,7 @@
 import discord
 from dotenv import load_dotenv
 import os
+import f1_schedule
 
 # Load environment variables
 load_dotenv()
@@ -31,5 +32,11 @@ async def on_message(message):
 
     if message.content.startswith('!hello'):
         await message.channel.send('Hello! How can I help you today?')
+
+    if message.content.startswith('!f1schedule'):
+        xml_data = await f1_schedule.fetch_f1_schedule()  # Your existing function to fetch the XML data
+        schedule = f1_schedule.parse_f1_schedule(xml_data)  # Parse the XML data into a list of dictionaries
+        schedule_message = f1_schedule.format_schedule_for_discord(schedule)  # Format it for Discord
+        await message.channel.send(schedule_message)  # Send the formatted message
 
 client.run(TOKEN)
